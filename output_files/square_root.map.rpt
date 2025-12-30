@@ -1,5 +1,5 @@
 Analysis & Synthesis report for square_root
-Tue Dec 30 16:34:16 2025
+Tue Dec 30 21:39:13 2025
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -52,13 +52,13 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Dec 30 16:34:16 2025           ;
+; Analysis & Synthesis Status        ; Successful - Tue Dec 30 21:39:13 2025           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; square_root                                     ;
 ; Top-level Entity Name              ; square_root                                     ;
 ; Family                             ; Cyclone IV E                                    ;
-; Total logic elements               ; 1,333                                           ;
-;     Total combinational functions  ; 1,194                                           ;
+; Total logic elements               ; 1,335                                           ;
+;     Total combinational functions  ; 1,197                                           ;
 ;     Dedicated logic registers      ; 533                                             ;
 ; Total registers                    ; 533                                             ;
 ; Total pins                         ; 6                                               ;
@@ -163,19 +163,20 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 16          ;
 ; Maximum allowed            ; 16          ;
 ;                            ;             ;
-; Average used               ; 1.01        ;
+; Average used               ; 1.00        ;
 ; Maximum used               ; 16          ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
 ;     Processor 2            ;   0.1%      ;
-;     Processor 3            ;   0.1%      ;
-;     Processor 4            ;   0.1%      ;
-;     Processor 5            ;   0.1%      ;
+;     Processor 3            ;   0.0%      ;
+;     Processor 4            ;   0.0%      ;
+;     Processor 5            ;   0.0%      ;
 ;     Processor 6            ;   0.0%      ;
 ;     Processor 7            ;   0.0%      ;
 ;     Processor 8            ;   0.0%      ;
-;     Processors 9-16        ;   0.0%      ;
+;     Processor 9            ;   0.0%      ;
+;     Processors 10-16       ;   0.0%      ;
 +----------------------------+-------------+
 
 
@@ -207,16 +208,16 @@ on the Quartus Prime software download page.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 1,333     ;
+; Estimated Total logic elements              ; 1,335     ;
 ;                                             ;           ;
-; Total combinational functions               ; 1194      ;
+; Total combinational functions               ; 1197      ;
 ; Logic element usage by number of LUT inputs ;           ;
 ;     -- 4 input functions                    ; 355       ;
-;     -- 3 input functions                    ; 631       ;
-;     -- <=2 input functions                  ; 208       ;
+;     -- 3 input functions                    ; 632       ;
+;     -- <=2 input functions                  ; 210       ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 610       ;
+;     -- normal mode                          ; 613       ;
 ;     -- arithmetic mode                      ; 584       ;
 ;                                             ;           ;
 ; Total registers                             ; 533       ;
@@ -229,7 +230,7 @@ on the Quartus Prime software download page.
 ;                                             ;           ;
 ; Maximum fan-out node                        ; clk~input ;
 ; Maximum fan-out                             ; 533       ;
-; Total fan-out                               ; 5815      ;
+; Total fan-out                               ; 5822      ;
 ; Average fan-out                             ; 3.34      ;
 +---------------------------------------------+-----------+
 
@@ -239,7 +240,7 @@ on the Quartus Prime software download page.
 +---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
 ; Compilation Hierarchy Node            ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                             ; Entity Name    ; Library Name ;
 +---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
-; |square_root                          ; 1194 (1)            ; 533 (0)                   ; 0           ; 0            ; 0       ; 0         ; 6    ; 0            ; |square_root                                                    ; square_root    ; work         ;
+; |square_root                          ; 1197 (1)            ; 533 (0)                   ; 0           ; 0            ; 0       ; 0         ; 6    ; 0            ; |square_root                                                    ; square_root    ; work         ;
 ;    |Initial_Guess:inst_initial_guess| ; 124 (124)           ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Initial_Guess:inst_initial_guess                   ; Initial_Guess  ; work         ;
 ;    |Register_S:inst_reg_s|            ; 0 (0)               ; 32 (32)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Register_S:inst_reg_s                              ; Register_S     ; work         ;
 ;    |Register_Xn:inst_reg_xn|          ; 0 (0)               ; 62 (62)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Register_Xn:inst_reg_xn                            ; Register_Xn    ; work         ;
@@ -249,8 +250,8 @@ on the Quartus Prime software download page.
 ;    |nr_block:inst_nr_block|           ; 766 (0)             ; 236 (0)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block                             ; nr_block       ; work         ;
 ;       |adder_shifter:inst_adder|      ; 63 (63)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block|adder_shifter:inst_adder    ; adder_shifter  ; work         ;
 ;       |radix4_divider:inst_divider|   ; 703 (703)           ; 236 (236)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider ; radix4_divider ; work         ;
-;    |uart_rx:inst_uart_rx|             ; 126 (72)            ; 102 (66)                  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx                               ; uart_rx        ; work         ;
-;       |uart_rx_byte:inst_uart_byte|   ; 54 (54)             ; 36 (36)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte   ; uart_rx_byte   ; work         ;
+;    |uart_rx:inst_uart_rx|             ; 129 (76)            ; 102 (66)                  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx                               ; uart_rx        ; work         ;
+;       |uart_rx_byte:inst_uart_byte|   ; 53 (53)             ; 36 (36)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte   ; uart_rx_byte   ; work         ;
 ;    |uart_tx:inst_uart_tx|             ; 86 (40)             ; 85 (57)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_tx:inst_uart_tx                               ; uart_tx        ; work         ;
 ;       |uart_tx_byte:inst_tx_byte|     ; 46 (46)             ; 28 (28)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte     ; uart_tx_byte   ; work         ;
 +---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
@@ -422,23 +423,23 @@ Encoding Type:  One-Hot
 +-----------------------------------------------------------------+---------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                             ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                   ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
-; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_INDEX[1]       ;
-; 3:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|r_accum[1]                                 ;
-; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_INDEX[2]     ;
-; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_PRESCALER[0] ;
-; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_PRESCALER[11]  ;
-; 5:1                ; 104 bits  ; 312 LEs       ; 104 LEs              ; 208 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|quo_reg[18]  ;
-; 5:1                ; 32 bits   ; 96 LEs        ; 32 LEs               ; 64 LEs                 ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[62]  ;
-; 6:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[4]                            ;
-; 6:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[1]                            ;
-; 8:1                ; 62 bits   ; 310 LEs       ; 186 LEs              ; 124 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[155] ;
-; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; No         ; |square_root|control_unit:inst_control|state                                 ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                              ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                    ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_INDEX[2]        ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_INDEX[1]      ;
+; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_PRESCALER[12] ;
+; 5:1                ; 32 bits   ; 96 LEs        ; 32 LEs               ; 64 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|r_accum[23]                                 ;
+; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_PRESCALER[11]   ;
+; 5:1                ; 104 bits  ; 312 LEs       ; 104 LEs              ; 208 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|quo_reg[41]   ;
+; 5:1                ; 32 bits   ; 96 LEs        ; 32 LEs               ; 64 LEs                 ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[72]   ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[4]                             ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[1]                             ;
+; 8:1                ; 62 bits   ; 310 LEs       ; 186 LEs              ; 124 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[155]  ;
+; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; No         ; |square_root|control_unit:inst_control|state                                  ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
 
 
 +----------------------------------------------------------------------------------------------------------------+
@@ -475,15 +476,15 @@ Encoding Type:  One-Hot
 ;     ENA SCLR          ; 57                          ;
 ;     ENA SLD           ; 6                           ;
 ;     plain             ; 37                          ;
-; cycloneiii_lcell_comb ; 1195                        ;
+; cycloneiii_lcell_comb ; 1198                        ;
 ;     arith             ; 584                         ;
 ;         2 data inputs ; 58                          ;
 ;         3 data inputs ; 526                         ;
-;     normal            ; 611                         ;
+;     normal            ; 614                         ;
 ;         0 data inputs ; 3                           ;
 ;         1 data inputs ; 14                          ;
-;         2 data inputs ; 134                         ;
-;         3 data inputs ; 105                         ;
+;         2 data inputs ; 136                         ;
+;         3 data inputs ; 106                         ;
 ;         4 data inputs ; 355                         ;
 ;                       ;                             ;
 ; Max LUT depth         ; 13.00                       ;
@@ -506,7 +507,7 @@ Encoding Type:  One-Hot
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Tue Dec 30 16:34:05 2025
+    Info: Processing started: Tue Dec 30 21:38:54 2025
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off square_root -c square_root
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
@@ -538,7 +539,7 @@ Info (12021): Found 2 design units, including 1 entities, in source file uart_rx
     Info (12022): Found design unit 1: uart_rx_byte-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx_byte.vhd Line: 15
     Info (12023): Found entity 1: uart_rx_byte File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx_byte.vhd Line: 5
 Info (12021): Found 2 design units, including 1 entities, in source file uart_rx.vhd
-    Info (12022): Found design unit 1: uart_rx-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 18
+    Info (12022): Found design unit 1: uart_rx-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 15
     Info (12023): Found entity 1: uart_rx File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 5
 Info (12021): Found 2 design units, including 1 entities, in source file uart_tx_byte.vhd
     Info (12022): Found design unit 1: uart_tx_byte-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx_byte.vhd Line: 15
@@ -556,32 +557,32 @@ Info (12021): Found 2 design units, including 1 entities, in source file registe
     Info (12022): Found design unit 1: Register_S-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_S.vhd Line: 51
     Info (12023): Found entity 1: Register_S File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_S.vhd Line: 31
 Info (12127): Elaborating entity "square_root" for the top level hierarchy
-Warning (10036): Verilog HDL or VHDL warning at square_root.vhd(160): object "s_tx_busy" assigned a value but never read File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 160
-Info (12128): Elaborating entity "uart_rx" for hierarchy "uart_rx:inst_uart_rx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 168
-Info (12128): Elaborating entity "uart_rx_byte" for hierarchy "uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 39
-Info (12128): Elaborating entity "Register_S" for hierarchy "Register_S:inst_reg_s" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 178
-Info (12128): Elaborating entity "Initial_Guess" for hierarchy "Initial_Guess:inst_initial_guess" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 187
-Info (12128): Elaborating entity "mux_2to1" for hierarchy "mux_2to1:inst_mux" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 193
-Info (12128): Elaborating entity "Register_Xn" for hierarchy "Register_Xn:inst_reg_xn" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 201
-Info (12128): Elaborating entity "nr_block" for hierarchy "nr_block:inst_nr_block" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 212
+Warning (10036): Verilog HDL or VHDL warning at square_root.vhd(161): object "s_tx_busy" assigned a value but never read File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 161
+Info (12128): Elaborating entity "uart_rx" for hierarchy "uart_rx:inst_uart_rx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 174
+Info (12128): Elaborating entity "uart_rx_byte" for hierarchy "uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 34
+Info (12128): Elaborating entity "Register_S" for hierarchy "Register_S:inst_reg_s" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 185
+Info (12128): Elaborating entity "Initial_Guess" for hierarchy "Initial_Guess:inst_initial_guess" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 194
+Info (12128): Elaborating entity "mux_2to1" for hierarchy "mux_2to1:inst_mux" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 200
+Info (12128): Elaborating entity "Register_Xn" for hierarchy "Register_Xn:inst_reg_xn" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 208
+Info (12128): Elaborating entity "nr_block" for hierarchy "nr_block:inst_nr_block" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 219
 Info (12128): Elaborating entity "radix4_divider" for hierarchy "nr_block:inst_nr_block|radix4_divider:inst_divider" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 67
 Info (12128): Elaborating entity "adder_shifter" for hierarchy "nr_block:inst_nr_block|adder_shifter:inst_adder" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 78
-Info (12128): Elaborating entity "comparator" for hierarchy "comparator:inst_comparator" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 223
-Info (12128): Elaborating entity "output_gate" for hierarchy "output_gate:inst_output_gate" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 231
-Info (12128): Elaborating entity "uart_tx" for hierarchy "uart_tx:inst_uart_tx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 238
+Info (12128): Elaborating entity "comparator" for hierarchy "comparator:inst_comparator" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 230
+Info (12128): Elaborating entity "output_gate" for hierarchy "output_gate:inst_output_gate" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 238
+Info (12128): Elaborating entity "uart_tx" for hierarchy "uart_tx:inst_uart_tx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 245
 Info (12128): Elaborating entity "uart_tx_byte" for hierarchy "uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx.vhd Line: 38
-Info (12128): Elaborating entity "control_unit" for hierarchy "control_unit:inst_control" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 248
+Info (12128): Elaborating entity "control_unit" for hierarchy "control_unit:inst_control" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 255
 Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 1378 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 1380 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 3 input pins
     Info (21059): Implemented 3 output pins
-    Info (21061): Implemented 1372 logic cells
+    Info (21061): Implemented 1374 logic cells
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 2 warnings
     Info: Peak virtual memory: 4939 megabytes
-    Info: Processing ended: Tue Dec 30 16:34:16 2025
-    Info: Elapsed time: 00:00:11
-    Info: Total CPU time (on all processors): 00:00:24
+    Info: Processing ended: Tue Dec 30 21:39:13 2025
+    Info: Elapsed time: 00:00:19
+    Info: Total CPU time (on all processors): 00:00:18
 
 

@@ -24,6 +24,7 @@ architecture Behavioral of square_root is
     component uart_rx is
         port (
             clk         : in  std_logic;
+            reset       : in  std_logic;
             rx_line     : in  std_logic;
             data_out_32 : out std_logic_vector(31 downto 0);
             data_valid  : out std_logic
@@ -159,15 +160,21 @@ architecture Behavioral of square_root is
     -- UART TX Status
     signal s_tx_busy      : std_logic;
 
+    -- UART RX Reset
+    signal s_uart_rx_reset_n : std_logic;
+
 begin
 
     led_busy <= (fsm_en_nr); -- On while calculating
     led_done <= (fsm_done);  -- Blinks when done
 
+    s_uart_rx_reset_n <= reset AND (NOT fsm_done);
+
     -- 1. UART RECEIVER (Input Interface)
     inst_uart_rx: uart_rx
         port map (
             clk         => clk,
+            reset       => s_uart_rx_reset_n, 
             rx_line     => uart_rx_line,
             data_out_32 => s_rx_data_32,
             data_valid  => s_rx_valid -- Triggers Register Load AND FSM Start

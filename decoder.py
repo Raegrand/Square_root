@@ -6,7 +6,7 @@ def decode_uart_result(hex_string):
         return None
 
     try:
-        fuyyyyyyyyyyyyyyyyll_value = int(clean_hex, 16)
+        full_value = int(clean_hex, 16)
    
         integer_part = (full_value >> 20) & 0xFFFF
         

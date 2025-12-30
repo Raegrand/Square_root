@@ -1,12 +1,12 @@
-Fitter Status : Successful - Tue Dec 30 16:34:26 2025
+Fitter Status : Successful - Tue Dec 30 21:39:23 2025
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : square_root
 Top-level Entity Name : square_root
 Family : Cyclone IV E
 Device : EP4CE6E22C8
 Timing Models : Final
-Total logic elements : 1,221 / 6,272 ( 19 % )
-    Total combinational functions : 1,195 / 6,272 ( 19 % )
+Total logic elements : 1,233 / 6,272 ( 20 % )
+    Total combinational functions : 1,198 / 6,272 ( 19 % )
     Dedicated logic registers : 533 / 6,272 ( 8 % )
 Total registers : 533
 Total pins : 6 / 92 ( 7 % )

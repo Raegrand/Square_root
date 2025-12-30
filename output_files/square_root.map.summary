@@ -1,10 +1,10 @@
-Analysis & Synthesis Status : Successful - Tue Dec 30 16:34:16 2025
+Analysis & Synthesis Status : Successful - Tue Dec 30 21:39:13 2025
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : square_root
 Top-level Entity Name : square_root
 Family : Cyclone IV E
-Total logic elements : 1,333
-    Total combinational functions : 1,194
+Total logic elements : 1,335
+    Total combinational functions : 1,197
     Dedicated logic registers : 533
 Total registers : 533
 Total pins : 6
