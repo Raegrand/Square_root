@@ -1,0 +1,144 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use std.textio.all;
+use ieee.std_logic_textio.all;
+
+entity tb_debug_convergence is
+end tb_debug_convergence;
+
+architecture behavior of tb_debug_convergence is
+
+    -- DUT Component
+    component square_root is
+        port(
+            clk, reset, uart_rx_line : in std_logic;
+            uart_tx_line, led_busy, led_done : out std_logic
+        );
+    end component;
+
+    -- Signals
+    signal clk : std_logic := '0';
+    signal reset : std_logic := '0';
+    signal uart_rx_line : std_logic := '1';
+    signal uart_tx_line, led_busy, led_done : std_logic;
+
+    constant CLK_PERIOD : time := 20 ns;
+    constant BAUD_PERIOD : time := 104167 ns;
+
+    -- [[ SPYING ON INTERNAL SIGNALS ]] --
+    -- 1. Current Iteration Count
+    alias spy_iter is << signal uut.inst_control.iter_count : integer >>;
+    -- 2. State Machine (To know when a step finishes)
+    type state_type is (IDLE, INIT, KALKULASI, WAIT_DIVIDER, UPDATE, DONE_STATE);
+    alias spy_state is << signal uut.inst_control.state : state_type >>;
+    -- 3. The Current Guess (Xn) from Register
+    alias spy_xn is << signal uut.inst_reg_xn.d_out : std_logic_vector(61 downto 0) >>;
+    -- 4. The Divider Result (Quotient) inside NR Block
+    alias spy_quotient is << signal uut.inst_nr_block.quotient_result : std_logic_vector(61 downto 0) >>;
+
+begin
+
+    uut: square_root port map (clk, reset, uart_rx_line, uart_tx_line, led_busy, led_done);
+
+    -- Clock
+    process begin
+        clk <= '0'; wait for CLK_PERIOD/2;
+        clk <= '1'; wait for CLK_PERIOD/2;
+    end process;
+
+    -- Helper to print Fixed Point (Q16.20) as Real
+    function to_real(slv : std_logic_vector) return real is
+    begin
+        return real(to_integer(unsigned(slv))) / 1048576.0;
+    end function;
+
+    -- Helper: Send ASCII Number
+    procedure UART_SEND_STR(s : string) is
+    begin
+        for i in s'range loop
+            uart_rx_line <= '0'; wait for BAUD_PERIOD; -- Start
+            for b in 0 to 7 loop
+                uart_rx_line <= std_logic(to_unsigned(character'pos(s(i)), 8)(b));
+                wait for BAUD_PERIOD;
+            end loop;
+            uart_rx_line <= '1'; wait for BAUD_PERIOD; -- Stop
+        end loop;
+        -- Send Enter (0x0A)
+        uart_rx_line <= '0'; wait for BAUD_PERIOD;
+        for b in 0 to 7 loop
+            uart_rx_line <= std_logic(to_unsigned(10, 8)(b));
+            wait for BAUD_PERIOD;
+        end loop;
+        uart_rx_line <= '1'; wait for BAUD_PERIOD;
+    end procedure;
+
+    -- Main Process
+    process
+        variable last_iter : integer := -1;
+    begin
+        reset <= '0'; wait for 100 ns; reset <= '1'; wait for 100 ns;
+
+        report "======================================================" severity note;
+        report " DEBUG CONVERGENCE TEST (Spying on Internal Logic)    " severity note;
+        report "======================================================" severity note;
+
+        -- TEST CASE 1: 100 (Expected 10.0)
+        report "--- TEST 1: Input '100' ---" severity note;
+        UART_SEND_STR("100");
+        
+        -- Wait loop to print every iteration
+        while led_done = '0' loop
+            wait until rising_edge(clk);
+            
+            -- Trigger print only when state changes to UPDATE (Calculation just finished)
+            if spy_state = UPDATE and spy_iter /= last_iter then
+                report " Iter: " & integer'image(spy_iter) & 
+                       " | Xn (Guess): " & real'image(to_real(spy_xn)) & 
+                       " | S/Xn (Div): " & real'image(to_real(spy_quotient));
+                last_iter := spy_iter;
+            end if;
+            
+            -- Timeout protection
+            if now > 15 ms then exit; end if;
+        end loop;
+        wait for 1 ms;
+
+        -- TEST CASE 2: 1024 (Expected 32.0)
+        report "--- TEST 2: Input '1024' ---" severity note;
+        UART_SEND_STR("1024");
+        last_iter := -1;
+        
+        while led_done = '0' loop
+            wait until rising_edge(clk);
+            if spy_state = UPDATE and spy_iter /= last_iter then
+                report " Iter: " & integer'image(spy_iter) & 
+                       " | Xn: " & real'image(to_real(spy_xn)) & 
+                       " | Div: " & real'image(to_real(spy_quotient));
+                last_iter := spy_iter;
+            end if;
+            if now > 30 ms then exit; end if;
+        end loop;
+        wait for 1 ms;
+        
+        -- TEST CASE 3: 12345 (Expected 111.108)
+        report "--- TEST 3: Input '12345' ---" severity note;
+        UART_SEND_STR("12345");
+        last_iter := -1;
+        
+        while led_done = '0' loop
+            wait until rising_edge(clk);
+            if spy_state = UPDATE and spy_iter /= last_iter then
+                report " Iter: " & integer'image(spy_iter) & 
+                       " | Xn: " & real'image(to_real(spy_xn)) & 
+                       " | Div: " & real'image(to_real(spy_quotient));
+                last_iter := spy_iter;
+            end if;
+            if now > 45 ms then exit; end if;
+        end loop;
+
+        report "=== DEBUG FINISHED ===" severity note;
+        wait;
+    end process;
+
+end behavior;

@@ -1,0 +1,156 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity radix4_divider is
+    Port (
+        clk        : in  std_logic;
+        reset      : in  std_logic;
+        start      : in  std_logic;
+        
+        -- Dividend 'S' (Standard 32-bit Integer)
+        dividend_S : in  std_logic_vector(31 downto 0);
+        
+        -- Divisor 'Xn' (Q42.20 Fixed Point -> 62 bits)
+        divisor_Xn : in  std_logic_vector(61 downto 0);
+        
+        -- Result (Q42.20 Fixed Point -> 62 bits)
+        quotient   : out std_logic_vector(61 downto 0);
+        done       : out std_logic
+    );
+end radix4_divider;
+
+architecture Behavioral of radix4_divider is
+
+    -- MATH EXPLANATION:
+    -- We want to calculate Q = S / Xn.
+    -- S is Integer. Xn is Q42.20 (Val = X_bits * 2^-20).
+    -- Target Q is Q42.20 (Val = Q_bits * 2^-20).
+    --
+    -- Algebra:
+    -- Q_val = S / (X_bits * 2^-20)
+    -- Q_bits * 2^-20 = (S * 2^20) / X_bits
+    -- Q_bits = (S * 2^40) / X_bits
+    --
+    -- Therefore, we must divide (S shifted left 40) by (Xn raw bits).
+    -- Dividend Width = 32 + 40 = 72 bits.
+    
+    constant WIDTH_DIVISOR  : integer := 62;
+    constant WIDTH_DIVIDEND : integer := 72; -- 32 bit S + 40 bit shift
+    
+    -- Radix-4 resolves 2 bits per cycle. 
+    -- We need to cover the full width of the Dividend (72 bits).
+    -- 72 / 2 = 36 iterations.
+    constant ITERATIONS : integer := 36; 
+
+    type state_type is (IDLE, CALC, FINISH);
+    signal state : state_type := IDLE;
+
+    -- REGISTERS
+    
+    -- Remainder Register:
+    -- Must hold the Dividend and allow for the "Sliding Window" subtraction.
+    -- Size = Dividend Width + Divisor Width (safe upper bound) + sign bits
+    -- Let's use 140 bits to handle the shifting and alignment cleanly.
+    signal rem_reg : unsigned(139 downto 0);
+    
+    -- Quotient Register:
+    -- Accumulates the result bits.
+    signal quo_reg : unsigned(71 downto 0);
+    
+    -- Divisor Storage
+    signal div_reg : unsigned(61 downto 0);
+    
+    -- Multiples for Radix-4 Comparison (extended by 2 bits for overflow safety)
+    signal div_x3 : unsigned(63 downto 0);
+    signal div_x2 : unsigned(63 downto 0);
+    signal div_x1 : unsigned(63 downto 0);
+
+    signal count : integer range 0 to ITERATIONS;
+
+begin
+
+    -- Pre-calculate multiples: 1x, 2x, 3x Divisor
+    div_x1 <= resize(div_reg, 64);
+    div_x2 <= resize(div_reg & '0', 64);             -- Div * 2
+    div_x3 <= resize(div_reg & '0', 64) + resize(div_reg, 64); -- Div * 3
+
+    process(clk, reset)
+        variable v_rem : unsigned(139 downto 0);
+        variable v_quo : unsigned(71 downto 0);
+        
+        -- Window for comparison: 
+        -- Matches the top bits of the Remainder where Divisor aligns
+        variable v_compare_window : unsigned(63 downto 0); 
+    begin
+        if reset = '1' then
+            state   <= IDLE;
+            rem_reg <= (others => '0');
+            quo_reg <= (others => '0');
+            div_reg <= (others => '0');
+            done    <= '0';
+            
+        elsif rising_edge(clk) then
+            case state is
+                when IDLE =>
+                    done <= '0';
+                    if start = '1' then
+                        -- 1. Latch Divisor
+                        div_reg <= unsigned(divisor_Xn);
+                        
+                        -- 2. Setup Dividend (S << 40)
+                        -- We place the 72-bit extended S into the register.
+                        -- We align it such that the MSB is ready for the first check.
+                        rem_reg <= (others => '0');
+                        rem_reg(71 downto 0) <= unsigned(dividend_S) & x"0000000000"; -- S & 40 zeros
+                        
+                        quo_reg <= (others => '0');
+                        count   <= ITERATIONS; 
+                        state   <= CALC;
+                    end if;
+
+                when CALC =>
+                    if count = 0 then
+                        state <= FINISH;
+                    else
+                        v_rem := rem_reg;
+                        v_quo := quo_reg;
+                        
+                        v_rem := v_rem sll 2;
+                        v_quo := v_quo sll 2;
+
+                        v_compare_window := v_rem(135 downto 72);
+                        
+                        if v_compare_window >= div_x3 then
+                            v_quo(1 downto 0) := "11";
+                            v_rem(135 downto 72) := v_compare_window - div_x3;
+                            
+                        elsif v_compare_window >= div_x2 then
+                            v_quo(1 downto 0) := "10";
+                            v_rem(135 downto 72) := v_compare_window - div_x2;
+                            
+                        elsif v_compare_window >= div_x1 then
+                            v_quo(1 downto 0) := "01";
+                            v_rem(135 downto 72) := v_compare_window - div_x1;
+                            
+                        else
+                            v_quo(1 downto 0) := "00";
+                            -- No subtraction
+                        end if;
+
+                        -- 4. Update
+                        rem_reg <= v_rem;
+                        quo_reg <= v_quo;
+                        count   <= count - 1;
+                    end if;
+
+                when FINISH =>
+                    done <= '1';
+                    state <= IDLE;
+                    
+            end case;
+        end if;
+    end process;
+    quotient <= std_logic_vector(quo_reg(61 downto 0));
+
+end Behavioral;

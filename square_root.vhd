@@ -1,0 +1,266 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity square_root is
+    Port (
+        clk         : in  std_logic; -- System Clock (50MHz)
+        reset       : in  std_logic; -- Active Low Reset (Button)
+        
+        uart_rx_line : in  std_logic; -- Serial Input (From PC)
+        uart_tx_line : out std_logic; -- Serial Output (To PC)
+        
+        led_busy    : out std_logic; -- Lights up during calculation
+        led_done    : out std_logic  -- Blinks when result is sent
+    );
+end square_root;
+
+architecture Behavioral of square_root is
+
+    
+    -- COMPONENT DECLARATIONS
+    
+    
+    component uart_rx is
+        port (
+            clk         : in  std_logic;
+            rx_line     : in  std_logic;
+            data_out_32 : out std_logic_vector(31 downto 0);
+            data_valid  : out std_logic
+        );
+    end component;
+
+    component Register_S is
+        Port (
+            clk      : in  STD_LOGIC;
+            rst      : in  STD_LOGIC;
+            load_en  : in  STD_LOGIC;
+            data_in  : in  STD_LOGIC_VECTOR (31 downto 0);
+            data_out : out STD_LOGIC_VECTOR (31 downto 0)
+        );
+    end component;
+
+    component Initial_Guess is
+        Port (
+            input_s   : in  STD_LOGIC_VECTOR (31 downto 0);
+            guess_out : out STD_LOGIC_VECTOR (61 downto 0)
+        );
+    end component;
+
+    component mux_2to1 is
+        Port (
+            in_A    : in  std_logic_vector(61 downto 0);
+            in_B    : in  std_logic_vector(61 downto 0);
+            sel_mux : in  std_logic;
+            mux_out : out std_logic_vector(61 downto 0)
+        );
+    end component;
+
+    component Register_Xn is
+        Port (
+            clk     : in  STD_LOGIC;
+            rst     : in  STD_LOGIC;
+            load_xn : in  STD_LOGIC;
+            d_in    : in  STD_LOGIC_VECTOR (61 downto 0);
+            d_out   : out STD_LOGIC_VECTOR (61 downto 0)
+        );
+    end component;
+
+    component nr_block is
+        Port (
+            clk        : in  std_logic;
+            reset      : in  std_logic;
+            start      : in  std_logic;
+            dividend_S : in  std_logic_vector(31 downto 0);
+            xn_current : in  std_logic_vector(61 downto 0);
+            xn_next    : out std_logic_vector(61 downto 0);
+            nr_done    : out std_logic
+        );
+    end component;
+
+    component comparator is
+        Port (
+            a_in   : in  std_logic_vector(61 downto 0);
+            b_in   : in  std_logic_vector(61 downto 0);
+            cmp_eq : out std_logic
+        );
+    end component;
+
+    component output_gate is
+        Port (
+            data_in  : in  std_logic_vector(61 downto 0);
+            out_en   : in  std_logic;
+            data_out : out std_logic_vector(35 downto 0)
+        );
+    end component;
+
+    component uart_tx is
+        port (
+            clk        : in  std_logic;
+            start      : in  std_logic;
+            data_in_36 : in  std_logic_vector(35 downto 0);
+            tx_line    : out std_logic;
+            busy       : out std_logic
+        );
+    end component;
+
+    component control_unit is
+        Port (
+            clk       : in  std_logic;
+            reset     : in  std_logic;
+            start     : in  std_logic;
+            cmp_eq    : in  std_logic;
+            nr_done   : in  std_logic;
+            load_xn   : out std_logic;
+            sel_mux   : out std_logic;
+            en_nr     : out std_logic;
+            out_en    : out std_logic;
+            done      : out std_logic
+        );
+    end component;
+
+    
+    -- INTERNAL SIGNALS
+    
+    
+    -- UART RX -> System
+    signal s_rx_data_32   : std_logic_vector(31 downto 0);
+    signal s_rx_valid     : std_logic; -- Acts as System Start
+    
+    -- Register S
+    signal s_reg_S_out    : std_logic_vector(31 downto 0);
+    
+    -- Initial Guess
+    signal s_guess_out    : std_logic_vector(61 downto 0);
+    
+    -- Mux
+    signal s_mux_out      : std_logic_vector(61 downto 0);
+    
+    -- Register Xn
+    signal s_reg_Xn_out   : std_logic_vector(61 downto 0);
+    
+    -- NR Block
+    signal s_xn_next      : std_logic_vector(61 downto 0);
+    signal s_nr_done      : std_logic;
+    
+    -- Comparator
+    signal s_cmp_eq       : std_logic;
+    
+    -- Output Gate
+    signal s_gate_out     : std_logic_vector(35 downto 0);
+    
+    -- Control Unit (FSM) Outputs
+    signal fsm_load_xn    : std_logic;
+    signal fsm_sel_mux    : std_logic;
+    signal fsm_en_nr      : std_logic;
+    signal fsm_out_en     : std_logic;
+    signal fsm_done       : std_logic;
+
+    -- UART TX Status
+    signal s_tx_busy      : std_logic;
+
+begin
+
+    led_busy <= (fsm_en_nr); -- On while calculating
+    led_done <= (fsm_done);  -- Blinks when done
+
+    -- 1. UART RECEIVER (Input Interface)
+    inst_uart_rx: uart_rx
+        port map (
+            clk         => clk,
+            rx_line     => uart_rx_line,
+            data_out_32 => s_rx_data_32,
+            data_valid  => s_rx_valid -- Triggers Register Load AND FSM Start
+        );
+
+    -- 2. DATAPATH REGISTERS
+
+    inst_reg_s: Register_S
+        port map (
+            clk      => clk,
+            rst      => reset,
+            load_en  => s_rx_valid,
+            data_in  => s_rx_data_32,
+            data_out => s_reg_S_out
+        );
+
+    inst_initial_guess: Initial_Guess
+        port map (
+            input_s   => s_reg_S_out,
+            guess_out => s_guess_out 
+        );
+
+    inst_mux: mux_2to1
+        port map (
+            in_A    => s_guess_out,  
+            in_B    => s_xn_next, 
+            sel_mux => fsm_sel_mux,
+            mux_out => s_mux_out
+        );
+
+    inst_reg_xn: Register_Xn
+        port map (
+            clk     => clk,
+            rst     => reset,
+            load_xn => fsm_load_xn,
+            d_in    => s_mux_out,
+            d_out   => s_reg_Xn_out 
+        );
+
+    
+    -- 3. CALCULATION CORE
+    inst_nr_block: nr_block
+        port map (
+            clk        => clk,
+            reset      => reset,
+            start      => fsm_en_nr,     
+            dividend_S => s_reg_S_out,
+            xn_current => s_reg_Xn_out,
+            xn_next    => s_xn_next,
+            nr_done    => s_nr_done
+        );
+
+    inst_comparator: comparator
+        port map (
+            a_in   => s_reg_Xn_out,
+            b_in   => s_xn_next,  
+            cmp_eq => s_cmp_eq     
+        );
+
+    -- 4. OUTPUT INTERFACE
+    inst_output_gate: output_gate
+        port map (
+            data_in  => s_xn_next, 
+            out_en   => fsm_out_en, 
+            data_out => s_gate_out 
+        );
+
+    inst_uart_tx: uart_tx
+        port map (
+            clk        => clk,
+            start      => fsm_done,  
+            data_in_36 => s_gate_out,
+            tx_line    => uart_tx_line,
+            busy       => s_tx_busy
+        );
+
+    -- 5. CONTROL UNIT (Brain)
+    inst_control: control_unit
+        port map (
+            clk      => clk,
+            reset    => reset,
+            
+            -- Inputs
+            start    => s_rx_valid,
+            cmp_eq   => s_cmp_eq,
+            nr_done  => s_nr_done,
+            
+            -- Outputs
+            load_xn  => fsm_load_xn,
+            sel_mux  => fsm_sel_mux,
+            en_nr    => fsm_en_nr,
+            out_en   => fsm_out_en,
+            done     => fsm_done
+        );
+
+end Behavioral;

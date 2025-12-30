@@ -1,0 +1,83 @@
+-- Initial_Guess 
+
+-- Kelompok : 5 
+
+-- Deskripsi 
+
+-- Memberikan output initial guess atau tebakan awal untuk operasi Newton-Raphson 
+
+-- Untuk saat ini initial guess bernilai 1, tetapi ke depannya ada kemungkinan untuk menggunakan LUT & LZT 
+
+-- input_s : digunakan untuk operasi LUT dan LZT jika akan digunakan 
+
+-- guess_out : tebakan awal yang akan dikirimkan ke mux (saat ini bernilai 1) 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity Initial_Guess is 
+    Port ( 
+        input_s      : in  STD_LOGIC_VECTOR (31 downto 0);  
+        guess_out    : out STD_LOGIC_VECTOR (61 downto 0) 
+    );
+end Initial_Guess; 
+
+architecture Behavioral of Initial_Guess is 
+begin 
+
+    process(input_s)
+        variable msb_index : integer range -1 to 31;
+    begin
+        -- 1. LEADING ZERO DETECTOR
+        msb_index := -1; 
+        for i in 31 downto 0 loop
+            if input_s(i) = '1' then
+                msb_index := i;
+                exit; 
+            end if;
+        end loop;
+
+        -- 2. LOOKUP TABLE (Using Qualified Hex Literals)
+        -- Syntax: unsigned'(x"VAL") tells VHDL the type explicitly.
+        case msb_index is
+            when 0 => guess_out <= std_logic_vector(resize(unsigned'(x"100000"), 62));
+            when 1 => guess_out <= std_logic_vector(resize(unsigned'(x"16A09E"), 62));
+            when 2 => guess_out <= std_logic_vector(resize(unsigned'(x"200000"), 62));
+            when 3 => guess_out <= std_logic_vector(resize(unsigned'(x"2D413D"), 62));
+            when 4 => guess_out <= std_logic_vector(resize(unsigned'(x"400000"), 62));
+            when 5 => guess_out <= std_logic_vector(resize(unsigned'(x"5A827A"), 62));
+            when 6 => guess_out <= std_logic_vector(resize(unsigned'(x"800000"), 62));
+            when 7 => guess_out <= std_logic_vector(resize(unsigned'(x"B504F3"), 62));
+            
+            when 8 => guess_out <= std_logic_vector(resize(unsigned'(x"1000000"), 62));
+            when 9 => guess_out <= std_logic_vector(resize(unsigned'(x"16A09E6"), 62));
+            when 10 => guess_out <= std_logic_vector(resize(unsigned'(x"2000000"), 62));
+            when 11 => guess_out <= std_logic_vector(resize(unsigned'(x"2D413CD"), 62));
+            when 12 => guess_out <= std_logic_vector(resize(unsigned'(x"4000000"), 62));
+            when 13 => guess_out <= std_logic_vector(resize(unsigned'(x"5A8279A"), 62));
+            when 14 => guess_out <= std_logic_vector(resize(unsigned'(x"8000000"), 62));
+            when 15 => guess_out <= std_logic_vector(resize(unsigned'(x"B504F33"), 62));
+            
+            when 16 => guess_out <= std_logic_vector(resize(unsigned'(x"10000000"), 62));
+            when 17 => guess_out <= std_logic_vector(resize(unsigned'(x"16A09E66"), 62));
+            when 18 => guess_out <= std_logic_vector(resize(unsigned'(x"20000000"), 62));
+            when 19 => guess_out <= std_logic_vector(resize(unsigned'(x"2D413CCD"), 62));
+            when 20 => guess_out <= std_logic_vector(resize(unsigned'(x"40000000"), 62));
+            when 21 => guess_out <= std_logic_vector(resize(unsigned'(x"5A82799A"), 62));
+            
+            -- Large Values (Using 32+ bit Hex strings)
+            when 22 => guess_out <= std_logic_vector(resize(unsigned'(x"80000000"), 62));
+            when 23 => guess_out <= std_logic_vector(resize(unsigned'(x"B504F334"), 62));
+            when 24 => guess_out <= std_logic_vector(resize(unsigned'(x"100000000"), 62));
+            when 25 => guess_out <= std_logic_vector(resize(unsigned'(x"16A09E668"), 62));
+            when 26 => guess_out <= std_logic_vector(resize(unsigned'(x"200000000"), 62));
+            when 27 => guess_out <= std_logic_vector(resize(unsigned'(x"2D413CCD0"), 62));
+            when 28 => guess_out <= std_logic_vector(resize(unsigned'(x"400000000"), 62));
+            when 29 => guess_out <= std_logic_vector(resize(unsigned'(x"5A82799A0"), 62));
+            when 30 => guess_out <= std_logic_vector(resize(unsigned'(x"800000000"), 62));
+            when 31 => guess_out <= std_logic_vector(resize(unsigned'(x"B504F3340"), 62));
+            
+            when others => guess_out <= std_logic_vector(resize(unsigned'(x"000010"), 62));        end case;
+    end process;
+end Behavioral;

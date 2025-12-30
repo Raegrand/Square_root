@@ -1,0 +1,587 @@
+Analysis & Synthesis report for square_root
+Tue Dec 30 16:34:16 2025
+Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Source Files Read
+  6. Analysis & Synthesis Resource Usage Summary
+  7. Analysis & Synthesis Resource Utilization by Entity
+  8. State Machine - |square_root|control_unit:inst_control|state
+  9. State Machine - |square_root|uart_tx:inst_uart_tx|state
+ 10. State Machine - |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|state
+ 11. Registers Removed During Synthesis
+ 12. Removed Registers Triggering Further Register Optimizations
+ 13. General Register Statistics
+ 14. Inverted Register Statistics
+ 15. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 16. Port Connectivity Checks: "uart_tx:inst_uart_tx"
+ 17. Port Connectivity Checks: "uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte"
+ 18. Post-Synthesis Netlist Statistics for Top Partition
+ 19. Elapsed Time Per Partition
+ 20. Analysis & Synthesis Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2025  Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus Prime License Agreement,
+the Altera IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Altera and sold by Altera or its authorized distributors.  Please
+refer to the Altera Software License Subscription Agreements 
+on the Quartus Prime software download page.
+
+
+
++--------------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                         ;
++------------------------------------+-------------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Tue Dec 30 16:34:16 2025           ;
+; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
+; Revision Name                      ; square_root                                     ;
+; Top-level Entity Name              ; square_root                                     ;
+; Family                             ; Cyclone IV E                                    ;
+; Total logic elements               ; 1,333                                           ;
+;     Total combinational functions  ; 1,194                                           ;
+;     Dedicated logic registers      ; 533                                             ;
+; Total registers                    ; 533                                             ;
+; Total pins                         ; 6                                               ;
+; Total virtual pins                 ; 0                                               ;
+; Total memory bits                  ; 0                                               ;
+; Embedded Multiplier 9-bit elements ; 0                                               ;
+; Total PLLs                         ; 0                                               ;
++------------------------------------+-------------------------------------------------+
+
+
++------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                              ;
++------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                           ; Setting            ; Default Value      ;
++------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                           ; EP4CE6E22C8        ;                    ;
+; Top-level entity name                                            ; square_root        ; square_root        ;
+; Family name                                                      ; Cyclone IV E       ; Cyclone V          ;
+; Use smart compilation                                            ; Off                ; Off                ;
+; Enable parallel Assembler and Timing Analyzer during compilation ; On                 ; On                 ;
+; Enable compact report table                                      ; Off                ; Off                ;
+; Restructure Multiplexers                                         ; Auto               ; Auto               ;
+; Create Debugging Nodes for IP Cores                              ; Off                ; Off                ;
+; Preserve fewer node names                                        ; On                 ; On                 ;
+; Intel FPGA IP Evaluation Mode                                    ; Enable             ; Enable             ;
+; Verilog Version                                                  ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                     ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                         ; Auto               ; Auto               ;
+; Safe State Machine                                               ; Off                ; Off                ;
+; Extract Verilog State Machines                                   ; On                 ; On                 ;
+; Extract VHDL State Machines                                      ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                       ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                   ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                          ; On                 ; On                 ;
+; Infer RAMs from Raw Logic                                        ; On                 ; On                 ;
+; Parallel Synthesis                                               ; On                 ; On                 ;
+; DSP Block Balancing                                              ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                               ; On                 ; On                 ;
+; Power-Up Don't Care                                              ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                     ; Off                ; Off                ;
+; Remove Duplicate Registers                                       ; On                 ; On                 ;
+; Ignore CARRY Buffers                                             ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                           ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                            ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                        ; Off                ; Off                ;
+; Ignore LCELL Buffers                                             ; Off                ; Off                ;
+; Ignore SOFT Buffers                                              ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                   ; Off                ; Off                ;
+; Optimization Technique                                           ; Balanced           ; Balanced           ;
+; Carry Chain Length                                               ; 70                 ; 70                 ;
+; Auto Carry Chains                                                ; On                 ; On                 ;
+; Auto Open-Drain Pins                                             ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                            ; Off                ; Off                ;
+; Auto ROM Replacement                                             ; On                 ; On                 ;
+; Auto RAM Replacement                                             ; On                 ; On                 ;
+; Auto DSP Block Replacement                                       ; On                 ; On                 ;
+; Auto Shift Register Replacement                                  ; Auto               ; Auto               ;
+; Allow Shift Register Merging across Hierarchies                  ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                    ; On                 ; On                 ;
+; Strict RAM Replacement                                           ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                           ; Off                ; Off                ;
+; Auto RAM Block Balancing                                         ; On                 ; On                 ;
+; Auto RAM to Logic Cell Conversion                                ; Off                ; Off                ;
+; Auto Resource Sharing                                            ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                               ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                               ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                    ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing              ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                ; Off                ; Off                ;
+; Timing-Driven Synthesis                                          ; On                 ; On                 ;
+; Report Parameter Settings                                        ; On                 ; On                 ;
+; Report Source Assignments                                        ; On                 ; On                 ;
+; Report Connectivity Checks                                       ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                               ; Off                ; Off                ;
+; Synchronization Register Chain Length                            ; 2                  ; 2                  ;
+; Power Optimization During Synthesis                              ; Normal compilation ; Normal compilation ;
+; HDL message level                                                ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                  ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report         ; 5000               ; 5000               ;
+; Number of Swept Nodes Reported in Synthesis Report               ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report        ; 100                ; 100                ;
+; Clock MUX Protection                                             ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                      ; Off                ; Off                ;
+; Block Design Naming                                              ; Auto               ; Auto               ;
+; SDC constraint protection                                        ; Off                ; Off                ;
+; Synthesis Effort                                                 ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal     ; On                 ; On                 ;
+; Pre-Mapping Resynthesis Optimization                             ; Off                ; Off                ;
+; Analysis & Synthesis Message Level                               ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                      ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                           ; On                 ; On                 ;
++------------------------------------------------------------------+--------------------+--------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 16          ;
+; Maximum allowed            ; 16          ;
+;                            ;             ;
+; Average used               ; 1.01        ;
+; Maximum used               ; 16          ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
+;     Processor 2            ;   0.1%      ;
+;     Processor 3            ;   0.1%      ;
+;     Processor 4            ;   0.1%      ;
+;     Processor 5            ;   0.1%      ;
+;     Processor 6            ;   0.0%      ;
+;     Processor 7            ;   0.0%      ;
+;     Processor 8            ;   0.0%      ;
+;     Processors 9-16        ;   0.0%      ;
++----------------------------+-------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                             ;
++----------------------------------+-----------------+-----------------+-------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type       ; File Name with Absolute Path                                      ; Library ;
++----------------------------------+-----------------+-----------------+-------------------------------------------------------------------+---------+
+; square_root.vhd                  ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd    ;         ;
+; radix4_divider.vhd               ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/radix4_divider.vhd ;         ;
+; adder_shifter.vhd                ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/adder_shifter.vhd  ;         ;
+; nr_block.vhd                     ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd       ;         ;
+; comparator.vhd                   ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/comparator.vhd     ;         ;
+; mux_2to1.vhd                     ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/mux_2to1.vhd       ;         ;
+; output_gate.vhd                  ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/output_gate.vhd    ;         ;
+; control_unit.vhd                 ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/control_unit.vhd   ;         ;
+; uart_rx_byte.vhd                 ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx_byte.vhd   ;         ;
+; uart_rx.vhd                      ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd        ;         ;
+; uart_tx_byte.vhd                 ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx_byte.vhd   ;         ;
+; uart_tx.vhd                      ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx.vhd        ;         ;
+; Initial_Guess.vhd                ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Initial_Guess.vhd  ;         ;
+; Register_Xn.vhd                  ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_Xn.vhd    ;         ;
+; Register_S.vhd                   ; yes             ; User VHDL File  ; C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_S.vhd     ;         ;
++----------------------------------+-----------------+-----------------+-------------------------------------------------------------------+---------+
+
+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimated Total logic elements              ; 1,333     ;
+;                                             ;           ;
+; Total combinational functions               ; 1194      ;
+; Logic element usage by number of LUT inputs ;           ;
+;     -- 4 input functions                    ; 355       ;
+;     -- 3 input functions                    ; 631       ;
+;     -- <=2 input functions                  ; 208       ;
+;                                             ;           ;
+; Logic elements by mode                      ;           ;
+;     -- normal mode                          ; 610       ;
+;     -- arithmetic mode                      ; 584       ;
+;                                             ;           ;
+; Total registers                             ; 533       ;
+;     -- Dedicated logic registers            ; 533       ;
+;     -- I/O registers                        ; 0         ;
+;                                             ;           ;
+; I/O pins                                    ; 6         ;
+;                                             ;           ;
+; Embedded Multiplier 9-bit elements          ; 0         ;
+;                                             ;           ;
+; Maximum fan-out node                        ; clk~input ;
+; Maximum fan-out                             ; 533       ;
+; Total fan-out                               ; 5815      ;
+; Average fan-out                             ; 3.34      ;
++---------------------------------------------+-----------+
+
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                                ;
++---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
+; Compilation Hierarchy Node            ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                             ; Entity Name    ; Library Name ;
++---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
+; |square_root                          ; 1194 (1)            ; 533 (0)                   ; 0           ; 0            ; 0       ; 0         ; 6    ; 0            ; |square_root                                                    ; square_root    ; work         ;
+;    |Initial_Guess:inst_initial_guess| ; 124 (124)           ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Initial_Guess:inst_initial_guess                   ; Initial_Guess  ; work         ;
+;    |Register_S:inst_reg_s|            ; 0 (0)               ; 32 (32)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Register_S:inst_reg_s                              ; Register_S     ; work         ;
+;    |Register_Xn:inst_reg_xn|          ; 0 (0)               ; 62 (62)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|Register_Xn:inst_reg_xn                            ; Register_Xn    ; work         ;
+;    |comparator:inst_comparator|       ; 40 (40)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|comparator:inst_comparator                         ; comparator     ; work         ;
+;    |control_unit:inst_control|        ; 25 (25)             ; 16 (16)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|control_unit:inst_control                          ; control_unit   ; work         ;
+;    |mux_2to1:inst_mux|                ; 26 (26)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|mux_2to1:inst_mux                                  ; mux_2to1       ; work         ;
+;    |nr_block:inst_nr_block|           ; 766 (0)             ; 236 (0)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block                             ; nr_block       ; work         ;
+;       |adder_shifter:inst_adder|      ; 63 (63)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block|adder_shifter:inst_adder    ; adder_shifter  ; work         ;
+;       |radix4_divider:inst_divider|   ; 703 (703)           ; 236 (236)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider ; radix4_divider ; work         ;
+;    |uart_rx:inst_uart_rx|             ; 126 (72)            ; 102 (66)                  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx                               ; uart_rx        ; work         ;
+;       |uart_rx_byte:inst_uart_byte|   ; 54 (54)             ; 36 (36)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte   ; uart_rx_byte   ; work         ;
+;    |uart_tx:inst_uart_tx|             ; 86 (40)             ; 85 (57)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_tx:inst_uart_tx                               ; uart_tx        ; work         ;
+;       |uart_tx_byte:inst_tx_byte|     ; 46 (46)             ; 28 (28)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte     ; uart_tx_byte   ; work         ;
++---------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------+----------------+--------------+
+Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
+Encoding Type:  One-Hot
++-----------------------------------------------------------------------------------------------------------------------+
+; State Machine - |square_root|control_unit:inst_control|state                                                          ;
++--------------------+------------------+--------------+--------------------+-----------------+------------+------------+
+; Name               ; state.DONE_STATE ; state.UPDATE ; state.WAIT_DIVIDER ; state.KALKULASI ; state.INIT ; state.IDLE ;
++--------------------+------------------+--------------+--------------------+-----------------+------------+------------+
+; state.IDLE         ; 0                ; 0            ; 0                  ; 0               ; 0          ; 0          ;
+; state.INIT         ; 0                ; 0            ; 0                  ; 0               ; 1          ; 1          ;
+; state.KALKULASI    ; 0                ; 0            ; 0                  ; 1               ; 0          ; 1          ;
+; state.WAIT_DIVIDER ; 0                ; 0            ; 1                  ; 0               ; 0          ; 1          ;
+; state.UPDATE       ; 0                ; 1            ; 0                  ; 0               ; 0          ; 1          ;
+; state.DONE_STATE   ; 1                ; 0            ; 0                  ; 0               ; 0          ; 1          ;
++--------------------+------------------+--------------+--------------------+-----------------+------------+------------+
+
+
+Encoding Type:  One-Hot
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |square_root|uart_tx:inst_uart_tx|state                                                                                                                                                   ;
++---------------+--------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+------------+
+; Name          ; state.FINISH ; state.WAIT_B5 ; state.SEND_B5 ; state.WAIT_B4 ; state.SEND_B4 ; state.WAIT_B3 ; state.SEND_B3 ; state.WAIT_B2 ; state.SEND_B2 ; state.WAIT_B1 ; state.SEND_B1 ; state.IDLE ;
++---------------+--------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+------------+
+; state.IDLE    ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0          ;
+; state.SEND_B1 ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1             ; 1          ;
+; state.WAIT_B1 ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1             ; 0             ; 1          ;
+; state.SEND_B2 ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1             ; 0             ; 0             ; 1          ;
+; state.WAIT_B2 ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1             ; 0             ; 0             ; 0             ; 1          ;
+; state.SEND_B3 ; 0            ; 0             ; 0             ; 0             ; 0             ; 0             ; 1             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.WAIT_B3 ; 0            ; 0             ; 0             ; 0             ; 0             ; 1             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.SEND_B4 ; 0            ; 0             ; 0             ; 0             ; 1             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.WAIT_B4 ; 0            ; 0             ; 0             ; 1             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.SEND_B5 ; 0            ; 0             ; 1             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.WAIT_B5 ; 0            ; 1             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
+; state.FINISH  ; 1            ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 0             ; 1          ;
++---------------+--------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+------------+
+
+
+Encoding Type:  One-Hot
++---------------------------------------------------------------------------------------+
+; State Machine - |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|state ;
++--------------+--------------+------------+--------------------------------------------+
+; Name         ; state.FINISH ; state.CALC ; state.IDLE                                 ;
++--------------+--------------+------------+--------------------------------------------+
+; state.IDLE   ; 0            ; 0          ; 0                                          ;
+; state.CALC   ; 0            ; 1          ; 1                                          ;
+; state.FINISH ; 1            ; 0          ; 1                                          ;
++--------------+--------------+------------+--------------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                                                                                                                                                                               ;
++-----------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+; Register name                                                                                                                                       ; Reason for Removal                                                         ;
++-----------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[9]                                                                                     ; Stuck at VCC due to stuck port data_in                                     ;
+; control_unit:inst_control|done                                                                                                                      ; Merged with control_unit:inst_control|out_en                               ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|s_TX_FLAG                                                                                            ; Merged with uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|o_BUSY          ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[11]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[10] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[9]                                                                                       ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[8]  ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[7]                                                                                       ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[6]  ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[5]                                                                                       ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[4]  ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[3]                                                                                       ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[2]  ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[1]                                                                                       ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[0]  ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[13]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[12] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[15]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[14] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[17]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[16] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[19]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[18] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[21]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[20] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[23]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[22] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[25]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[24] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[27]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[26] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[29]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[28] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[31]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[30] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[33]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[32] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[35]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[34] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[37]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[36] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[39]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[38] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[41]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[40] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[43]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[42] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[45]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[44] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[47]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[46] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[49]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[48] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[51]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[50] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[53]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[52] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[55]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[54] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[57]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[56] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[59]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[58] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[61]                                                                                      ; Merged with nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[60] ;
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60] ; Stuck at GND due to stuck port data_in                                     ;
+; control_unit:inst_control|state.KALKULASI                                                                                                           ; Merged with control_unit:inst_control|load_xn                              ;
+; Total Number of Removed Registers = 66                                                                                                              ;                                                                            ;
++-----------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Removed Registers Triggering Further Register Optimizations                                                                                                 ;
++---------------------------------------------------------------+---------------------------+-----------------------------------------------------------------+
+; Register name                                                 ; Reason for Removal        ; Registers Removed due to This Register                          ;
++---------------------------------------------------------------+---------------------------+-----------------------------------------------------------------+
+; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[0] ; Stuck at GND              ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[2],  ;
+;                                                               ; due to stuck port data_in ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[4],  ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[6],  ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[8],  ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[10], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[12], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[14], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[16], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[18], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[20], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[22], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[24], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[26], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[28], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[30], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[32], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[34], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[36], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[38], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[40], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[42], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[44], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[46], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[48], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[50], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[52], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[54], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[56], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[58], ;
+;                                                               ;                           ; nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[60]  ;
++---------------------------------------------------------------+---------------------------+-----------------------------------------------------------------+
+
+
++------------------------------------------------------+
+; General Register Statistics                          ;
++----------------------------------------------+-------+
+; Statistic                                    ; Value ;
++----------------------------------------------+-------+
+; Total registers                              ; 533   ;
+; Number of registers using Synchronous Clear  ; 119   ;
+; Number of registers using Synchronous Load   ; 49    ;
+; Number of registers using Asynchronous Clear ; 340   ;
+; Number of registers using Asynchronous Load  ; 0     ;
+; Number of registers using Clock Enable       ; 476   ;
+; Number of registers using Preset             ; 0     ;
++----------------------------------------------+-------+
+
+
++---------------------------------------------------------------------------+
+; Inverted Register Statistics                                              ;
++-----------------------------------------------------------------+---------+
+; Inverted Register                                               ; Fan out ;
++-----------------------------------------------------------------+---------+
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|o_TX             ; 3       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[8] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[3] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[1] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[0] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[2] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[7] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[5] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[4] ; 1       ;
+; uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_DATA_BUFFER[6] ; 1       ;
+; Total number of inverted registers = 10                         ;         ;
++-----------------------------------------------------------------+---------+
+
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                             ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                   ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_INDEX[1]       ;
+; 3:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|r_accum[1]                                 ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_INDEX[2]     ;
+; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte|r_PRESCALER[0] ;
+; 4:1                ; 13 bits   ; 26 LEs        ; 13 LEs               ; 13 LEs                 ; Yes        ; |square_root|uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte|r_PRESCALER[11]  ;
+; 5:1                ; 104 bits  ; 312 LEs       ; 104 LEs              ; 208 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|quo_reg[18]  ;
+; 5:1                ; 32 bits   ; 96 LEs        ; 32 LEs               ; 64 LEs                 ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[62]  ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[4]                            ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; Yes        ; |square_root|uart_tx:inst_uart_tx|tx_data_byte[1]                            ;
+; 8:1                ; 62 bits   ; 310 LEs       ; 186 LEs              ; 124 LEs                ; Yes        ; |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|rem_reg[155] ;
+; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; No         ; |square_root|control_unit:inst_control|state                                 ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "uart_tx:inst_uart_tx"                                                               ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; Port ; Type   ; Severity ; Details                                                                             ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; busy ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+
+
++---------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte"                                              ;
++-----------------+--------+----------+-------------------------------------------------------------------------------------+
+; Port            ; Type   ; Severity ; Details                                                                             ;
++-----------------+--------+----------+-------------------------------------------------------------------------------------+
+; o_sig_crrp_data ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
++-----------------+--------+----------+-------------------------------------------------------------------------------------+
+
+
++-----------------------------------------------------+
+; Post-Synthesis Netlist Statistics for Top Partition ;
++-----------------------+-----------------------------+
+; Type                  ; Count                       ;
++-----------------------+-----------------------------+
+; boundary_port         ; 6                           ;
+; cycloneiii_ff         ; 533                         ;
+;     CLR               ; 13                          ;
+;     CLR SLD           ; 7                           ;
+;     ENA               ; 93                          ;
+;     ENA CLR           ; 222                         ;
+;     ENA CLR SCLR      ; 62                          ;
+;     ENA CLR SLD       ; 36                          ;
+;     ENA SCLR          ; 57                          ;
+;     ENA SLD           ; 6                           ;
+;     plain             ; 37                          ;
+; cycloneiii_lcell_comb ; 1195                        ;
+;     arith             ; 584                         ;
+;         2 data inputs ; 58                          ;
+;         3 data inputs ; 526                         ;
+;     normal            ; 611                         ;
+;         0 data inputs ; 3                           ;
+;         1 data inputs ; 14                          ;
+;         2 data inputs ; 134                         ;
+;         3 data inputs ; 105                         ;
+;         4 data inputs ; 355                         ;
+;                       ;                             ;
+; Max LUT depth         ; 13.00                       ;
+; Average LUT depth     ; 7.33                        ;
++-----------------------+-----------------------------+
+
+
++-------------------------------+
+; Elapsed Time Per Partition    ;
++----------------+--------------+
+; Partition Name ; Elapsed Time ;
++----------------+--------------+
+; Top            ; 00:00:01     ;
++----------------+--------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Processing started: Tue Dec 30 16:34:05 2025
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off square_root -c square_root
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 2 design units, including 1 entities, in source file square_root.vhd
+    Info (12022): Found design unit 1: square_root-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 18
+    Info (12023): Found entity 1: square_root File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 5
+Info (12021): Found 2 design units, including 1 entities, in source file radix4_divider.vhd
+    Info (12022): Found design unit 1: radix4_divider-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/radix4_divider.vhd Line: 33
+    Info (12023): Found entity 1: radix4_divider File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/radix4_divider.vhd Line: 19
+Info (12021): Found 2 design units, including 1 entities, in source file adder_shifter.vhd
+    Info (12022): Found design unit 1: adder_shifter-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/adder_shifter.vhd Line: 23
+    Info (12023): Found entity 1: adder_shifter File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/adder_shifter.vhd Line: 14
+Info (12021): Found 2 design units, including 1 entities, in source file nr_block.vhd
+    Info (12022): Found design unit 1: nr_block-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 38
+    Info (12023): Found entity 1: nr_block File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 19
+Info (12021): Found 2 design units, including 1 entities, in source file comparator.vhd
+    Info (12022): Found design unit 1: comparator-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/comparator.vhd Line: 23
+    Info (12023): Found entity 1: comparator File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/comparator.vhd Line: 14
+Info (12021): Found 2 design units, including 1 entities, in source file mux_2to1.vhd
+    Info (12022): Found design unit 1: mux_2to1-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/mux_2to1.vhd Line: 29
+    Info (12023): Found entity 1: mux_2to1 File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/mux_2to1.vhd Line: 15
+Info (12021): Found 2 design units, including 1 entities, in source file output_gate.vhd
+    Info (12022): Found design unit 1: output_gate-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/output_gate.vhd Line: 23
+    Info (12023): Found entity 1: output_gate File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/output_gate.vhd Line: 13
+Info (12021): Found 2 design units, including 1 entities, in source file control_unit.vhd
+    Info (12022): Found design unit 1: control_unit-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/control_unit.vhd Line: 41
+    Info (12023): Found entity 1: control_unit File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/control_unit.vhd Line: 23
+Info (12021): Found 2 design units, including 1 entities, in source file uart_rx_byte.vhd
+    Info (12022): Found design unit 1: uart_rx_byte-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx_byte.vhd Line: 15
+    Info (12023): Found entity 1: uart_rx_byte File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx_byte.vhd Line: 5
+Info (12021): Found 2 design units, including 1 entities, in source file uart_rx.vhd
+    Info (12022): Found design unit 1: uart_rx-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 18
+    Info (12023): Found entity 1: uart_rx File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 5
+Info (12021): Found 2 design units, including 1 entities, in source file uart_tx_byte.vhd
+    Info (12022): Found design unit 1: uart_tx_byte-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx_byte.vhd Line: 15
+    Info (12023): Found entity 1: uart_tx_byte File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx_byte.vhd Line: 5
+Info (12021): Found 2 design units, including 1 entities, in source file uart_tx.vhd
+    Info (12022): Found design unit 1: uart_tx-behavior File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx.vhd Line: 15
+    Info (12023): Found entity 1: uart_tx File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx.vhd Line: 5
+Info (12021): Found 2 design units, including 1 entities, in source file initial_guess.vhd
+    Info (12022): Found design unit 1: Initial_Guess-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Initial_Guess.vhd Line: 25
+    Info (12023): Found entity 1: Initial_Guess File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Initial_Guess.vhd Line: 18
+Info (12021): Found 2 design units, including 1 entities, in source file register_xn.vhd
+    Info (12022): Found design unit 1: Register_Xn-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_Xn.vhd Line: 53
+    Info (12023): Found entity 1: Register_Xn File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_Xn.vhd Line: 33
+Info (12021): Found 2 design units, including 1 entities, in source file register_s.vhd
+    Info (12022): Found design unit 1: Register_S-Behavioral File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_S.vhd Line: 51
+    Info (12023): Found entity 1: Register_S File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/Register_S.vhd Line: 31
+Info (12127): Elaborating entity "square_root" for the top level hierarchy
+Warning (10036): Verilog HDL or VHDL warning at square_root.vhd(160): object "s_tx_busy" assigned a value but never read File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 160
+Info (12128): Elaborating entity "uart_rx" for hierarchy "uart_rx:inst_uart_rx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 168
+Info (12128): Elaborating entity "uart_rx_byte" for hierarchy "uart_rx:inst_uart_rx|uart_rx_byte:inst_uart_byte" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_rx.vhd Line: 39
+Info (12128): Elaborating entity "Register_S" for hierarchy "Register_S:inst_reg_s" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 178
+Info (12128): Elaborating entity "Initial_Guess" for hierarchy "Initial_Guess:inst_initial_guess" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 187
+Info (12128): Elaborating entity "mux_2to1" for hierarchy "mux_2to1:inst_mux" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 193
+Info (12128): Elaborating entity "Register_Xn" for hierarchy "Register_Xn:inst_reg_xn" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 201
+Info (12128): Elaborating entity "nr_block" for hierarchy "nr_block:inst_nr_block" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 212
+Info (12128): Elaborating entity "radix4_divider" for hierarchy "nr_block:inst_nr_block|radix4_divider:inst_divider" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 67
+Info (12128): Elaborating entity "adder_shifter" for hierarchy "nr_block:inst_nr_block|adder_shifter:inst_adder" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/nr_block.vhd Line: 78
+Info (12128): Elaborating entity "comparator" for hierarchy "comparator:inst_comparator" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 223
+Info (12128): Elaborating entity "output_gate" for hierarchy "output_gate:inst_output_gate" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 231
+Info (12128): Elaborating entity "uart_tx" for hierarchy "uart_tx:inst_uart_tx" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 238
+Info (12128): Elaborating entity "uart_tx_byte" for hierarchy "uart_tx:inst_uart_tx|uart_tx_byte:inst_tx_byte" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/uart_tx.vhd Line: 38
+Info (12128): Elaborating entity "control_unit" for hierarchy "control_unit:inst_control" File: C:/Users/ASUS/ACADS/Sistem Digital/Square_root/square_root.vhd Line: 248
+Info (286030): Timing-Driven Synthesis is running
+Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
+    Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
+Info (21057): Implemented 1378 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 3 input pins
+    Info (21059): Implemented 3 output pins
+    Info (21061): Implemented 1372 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 2 warnings
+    Info: Peak virtual memory: 4939 megabytes
+    Info: Processing ended: Tue Dec 30 16:34:16 2025
+    Info: Elapsed time: 00:00:11
+    Info: Total CPU time (on all processors): 00:00:24
+
+

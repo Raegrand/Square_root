@@ -1,0 +1,31 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity mux_2to1 is
+    Port (
+        -- Inputs are Q42.20 (62 bits)
+        A       : in  std_logic_vector(61 downto 0); -- Input for Select = 0
+        B       : in  std_logic_vector(61 downto 0); -- Input for Select = 1
+        
+        -- Select Signal
+        sel     : in  std_logic; -- '0' = Select A, '1' = Select B
+        
+        -- Output
+        mux_out : out std_logic_vector(61 downto 0)
+    );
+end mux_2to1;
+
+architecture Behavioral of mux_2to1 is
+begin
+    -- Simple Selection Logic
+    -- If sel is 0, pass A. Else pass B.
+    process(sel, A, B)
+    begin
+        if sel = '0' then
+            mux_out <= A;
+        else
+            mux_out <= B;
+        end if;
+    end process;
+    
+end Behavioral;

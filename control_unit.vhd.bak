@@ -1,0 +1,92 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity control_unit is
+    Port (
+        clk       : in  std_logic;
+        reset     : in  std_logic;
+        
+        start     : in  std_logic;
+        
+        cmp_eq    : in  std_logic; 
+        nr_done   : in  std_logic; 
+        
+        load_xn   : out std_logic; 
+        sel_mux   : out std_logic;
+        en_nr     : out std_logic; 
+        out_en    : out std_logic;
+        
+        done      : out std_logic
+    );
+end control_unit;
+
+architecture Behavioral of control_unit is
+    type state_type is (IDLE, INIT, KALKULASI, UPDATE, DONE_STATE);
+    signal state : state_type := IDLE;
+
+begin
+
+    process(clk, reset)
+    begin
+        if reset = '1' then
+            state <= IDLE;
+            -- Reset Outputs
+            load_xn <= '0';
+            sel_mux <= '0';
+            en_nr   <= '0';
+            out_en  <= '0';
+            done    <= '0';
+            
+        elsif rising_edge(clk) then
+            
+            load_xn <= '0';
+            sel_mux <= '0';
+            en_nr   <= '0';
+            out_en  <= '0';
+            done    <= '0';
+
+            case state is
+                when IDLE =>
+                    if start = '1' then
+                        state <= INIT;
+                    else
+                        state <= IDLE;
+                    end if;
+
+                -- 2. Load Initial Guess (Mux=0, Load=1)
+                when INIT =>
+                    sel_mux <= '0';
+                    load_xn <= '1'; 
+                    state   <= KALKULASI;
+
+                -- 3. Run Newton-Raphson (Wait for nr_done)
+                when KALKULASI =>
+                    en_nr <= '1'; 
+                    
+                    if nr_done = '1' then
+                        if cmp_eq = '1' then
+                            state <= DONE_STATE;
+                        else
+                            state <= UPDATE;
+                        end if;
+                    else
+                        state <= KALKULASI;
+                    end if;
+
+                -- 4. Update Xn (Mux=1, Load=1)
+                when UPDATE =>
+                    sel_mux <= '1';
+                    load_xn <= '1';
+                    state   <= KALKULASI;
+
+                -- 5. Finished
+                when DONE_STATE =>
+                    out_en <= '1';
+                    done   <= '1'; 
+                    state  <= IDLE;
+
+            end case;
+        end if;
+    end process;
+
+end Behavioral;

@@ -1,0 +1,152 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity tb_radix4_divider is
+-- Testbench has no ports
+end tb_radix4_divider;
+
+architecture Behavioral of tb_radix4_divider is
+
+    -- COMPONENT DECLARATION
+    component radix4_divider is
+        Port (
+            clk        : in  std_logic;
+            reset      : in  std_logic;
+            start      : in  std_logic;
+            dividend_S : in  std_logic_vector(31 downto 0);
+            divisor_Xn : in  std_logic_vector(61 downto 0);
+            quotient   : out std_logic_vector(61 downto 0);
+            done       : out std_logic
+        );
+    end component;
+
+    -- SIGNALS
+    signal clk        : std_logic := '0';
+    signal reset      : std_logic := '0';
+    signal start      : std_logic := '0';
+    signal dividend_S : std_logic_vector(31 downto 0) := (others => '0');
+    signal divisor_Xn : std_logic_vector(61 downto 0) := (others => '0');
+    signal quotient   : std_logic_vector(61 downto 0);
+    signal done       : std_logic;
+
+    -- CLOCK PERIOD
+    constant T : time := 20 ns; -- 50 MHz Clock
+
+    -- PROCEDURE TO SIMPLIFY TESTS
+    -- This allows us to write one line per test case
+    procedure check_division(
+        constant s_val      : in integer;                   -- Dividend (Integer)
+        constant xn_hex     : in std_logic_vector(61 downto 0); -- Divisor (Q42.20 Hex)
+        constant exp_hex    : in std_logic_vector(61 downto 0); -- Expected Result (Hex)
+        constant test_name  : in string
+    ) is
+    begin
+        -- 1. Setup Inputs
+        dividend_S <= std_logic_vector(to_unsigned(s_val, 32));
+        divisor_Xn <= xn_hex;
+        
+        -- 2. Pulse Start
+        wait until falling_edge(clk);
+        start <= '1';
+        wait until falling_edge(clk);
+        start <= '0';
+        
+        -- 3. Wait for Done
+        wait until done = '1';
+        wait for T; -- Wait a tiny bit for stable data reading
+        
+        -- 4. Check Result
+        -- We allow a small error margin of +/- 1 bit (LSB) due to truncation
+        if abs(signed(quotient) - signed(exp_hex)) <= 1 then
+            report "[PASS] " & test_name severity note;
+        else
+            report "[FAIL] " & test_name & 
+                   " | Expected: " & to_hstring(exp_hex) & 
+                   " | Got: " & to_hstring(quotient) severity error;
+        end if;
+        
+        -- 5. Wait before next test
+        wait for 5 * T;
+    end procedure;
+
+begin
+
+    -- INSTANTIATION
+    uut: radix4_divider
+        Port map (
+            clk        => clk,
+            reset      => reset,
+            start      => start,
+            dividend_S => dividend_S,
+            divisor_Xn => divisor_Xn,
+            quotient   => quotient,
+            done       => done
+        );
+
+    -- CLOCK PROCESS
+    process
+    begin
+        clk <= '0'; wait for T/2;
+        clk <= '1'; wait for T/2;
+    end process;
+
+    -- STIMULUS PROCESS
+    process
+    begin
+        -- RESET SYSTEM
+        reset <= '1';
+        wait for 100 ns;
+        reset <= '0';
+        wait for 100 ns;
+
+        ------------------------------------------------------------
+        -- TEST VECTORS (Q42.20 Format)
+        -- Note: 2^20 = 1048576 (0x100000 in Hex)
+        ------------------------------------------------------------
+
+        -- CASE 1: 10 / 1.0 = 10.0
+        -- Divisor 1.0 = 0x100000
+        -- Expected 10.0 = 0xA00000
+        check_division(10, 
+                       std_logic_vector(to_unsigned(1048576, 62)), 
+                       std_logic_vector(to_unsigned(10485760, 62)), 
+                       "Test 1: 10 / 1.0");
+
+        -- CASE 2: 45 / 3.0 = 15.0
+        -- Divisor 3.0 = 0x300000
+        -- Expected 15.0 = 0xF00000
+        check_division(45, 
+                       std_logic_vector(to_unsigned(3145728, 62)), -- 3 * 2^20
+                       std_logic_vector(to_unsigned(15728640, 62)), -- 15 * 2^20
+                       "Test 2: 45 / 3.0");
+
+        -- CASE 3: 20 / 0.5 = 40.0
+        -- Divisor 0.5 = 0x080000
+        -- Expected 40.0 = 20 / 0.5 = 40 * 2^20 = 41943040
+        check_division(20, 
+                       std_logic_vector(to_unsigned(524288, 62)),   -- 0.5 * 2^20
+                       std_logic_vector(to_unsigned(41943040, 62)), 
+                       "Test 3: 20 / 0.5");
+
+        -- CASE 4: 3 / 4.0 = 0.75
+        -- Divisor 4.0 = 0x400000
+        -- Expected 0.75 = 0.75 * 1048576 = 786432 (0xC0000)
+        check_division(3, 
+                       std_logic_vector(to_unsigned(4194304, 62)),  -- 4.0 * 2^20
+                       std_logic_vector(to_unsigned(786432, 62)),   -- 0.75 * 2^20
+                       "Test 4: 3 / 4.0");
+
+        -- CASE 5: 10 / 3.0 = 3.3333...
+        -- Expected: 3.3333 * 2^20 = approx 3495253 (0x355555)
+        check_division(10, 
+                       std_logic_vector(to_unsigned(3145728, 62)), 
+                       std_logic_vector(to_unsigned(3495253, 62)), 
+                       "Test 5: 10 / 3.0 (Recurring)");
+
+        -- End Simulation
+        report "All Tests Completed." severity failure; -- Stop Sim
+        wait;
+    end process;
+
+end Behavioral;

@@ -1,0 +1,147 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_square_root_debug is
+-- No ports
+end tb_square_root_debug;
+
+architecture behavior of tb_square_root_debug is
+
+    component square_root_debug is
+        Port (
+            clk        : in  std_logic;
+            reset      : in  std_logic;
+            start      : in  std_logic;
+            s_in       : in  std_logic_vector(31 downto 0);
+            result_out : out std_logic_vector(35 downto 0);
+            done_led   : out std_logic
+        );
+    end component;
+
+    signal clk, reset, start, done_led : std_logic := '0';
+    signal s_in       : std_logic_vector(31 downto 0) := (others => '0');
+    signal result_out : std_logic_vector(35 downto 0);
+    constant T : time := 20 ns;
+
+begin
+
+    uut: square_root_debug port map (clk, reset, start, s_in, result_out, done_led);
+
+    process begin
+        clk <= '0'; wait for T/2; clk <= '1'; wait for T/2;
+    end process;
+
+    process
+        -- AUTOMATED TEST PROCEDURE
+        procedure check_sqrt(
+            input_val : integer; 
+            exp_hex   : std_logic_vector(35 downto 0);
+            desc      : string
+        ) is
+            variable diff : signed(35 downto 0);
+        begin
+            -- 1. Reset
+            reset <= '0'; wait for 100 ns; reset <= '1'; wait for 100 ns;
+            
+            -- 2. Apply Input and Start
+            s_in <= std_logic_vector(to_unsigned(input_val, 32));
+            wait for T;
+            start <= '1'; wait for T; start <= '0';
+            
+            -- 3. Wait for Done
+            wait until done_led = '1';
+            wait for T*2; -- Wait for stable output
+            
+            -- 4. Check Tolerance (+/- 10 LSBs)
+            -- We cast to signed to check absolute difference
+            if unsigned(result_out) > unsigned(exp_hex) then
+                diff := signed(unsigned(result_out) - unsigned(exp_hex));
+            else
+                diff := signed(unsigned(exp_hex) - unsigned(result_out));
+            end if;
+
+            if diff <= 10 then
+                report "[PASS] " & desc & " | S=" & integer'image(input_val) severity note;
+            else
+                report "[FAIL] " & desc & " | Expected " & to_hstring(exp_hex) & 
+                       ", Got " & to_hstring(result_out) severity error;
+            end if;
+        end procedure;
+
+    begin
+        wait for 100 ns;
+
+        ------------------------------------------------------------
+        -- GROUP 1: PERFECT SQUARES
+        ------------------------------------------------------------
+        -- S=4, Root=2.0
+        check_sqrt(4, x"000200000", "Perfect Square 4");
+
+        -- S=16, Root=4.0
+        check_sqrt(16, x"000400000", "Perfect Square 16");
+
+        -- S=100, Root=10.0
+        check_sqrt(100, x"000A00000", "Perfect Square 100");
+
+        -- S=65536, Root=256.0 (2^16 -> 2^8)
+        check_sqrt(65536, x"010000000", "Perfect Square 64k");
+
+        -- S=1, Root=1.0
+        check_sqrt(1, x"000100000", "Identity 1");
+
+        ------------------------------------------------------------
+        -- GROUP 2: IRRATIONAL ROOTS
+        ------------------------------------------------------------
+        -- S=2, Root=1.41421... (0x16A09E)
+        check_sqrt(2, x"00016A09E", "Root 2");
+
+        -- S=3, Root=1.73205... (0x1BB67AE)
+        check_sqrt(3, x"0001BB67A", "Root 3");
+
+        -- S=5, Root=2.23606... (0x23C6EF)
+        check_sqrt(5, x"00023C6EF", "Root 5");
+
+        -- S=10, Root=3.16227... (0x3298B0)
+        check_sqrt(10, x"0003298B0", "Root 10");
+        
+        -- S=50, Root=7.07106... (0x712313)
+        check_sqrt(50, x"000712313", "Root 50");
+
+        ------------------------------------------------------------
+        -- GROUP 3: LARGE NUMBERS
+        ------------------------------------------------------------
+        -- S=123456 (0x1E240), Root=351.363... (0x15F5CF)
+        check_sqrt(123456, x"015F5CF5C", "Large Num 1");
+
+        -- S=1,000,000, Root=1000.0
+        check_sqrt(1000000, x"03E800000", "Million");
+        
+        -- S=999,999, Root=999.999... (0x3E7FFFF)
+        check_sqrt(999999, x"03E7FFFFF", "Near Million");
+
+        ------------------------------------------------------------
+        -- GROUP 4: EDGE CASES
+        ------------------------------------------------------------
+        -- S=0 (Should handle or return 0)
+        check_sqrt(0, x"000000000", "Zero Case");
+        
+        -- S=Max 16-bit (65535), Root=255.998...
+        check_sqrt(65535, x"00FFFF800", "Max 16bit");
+
+        ------------------------------------------------------------
+        -- GROUP 5: RANDOM CHECKS
+        ------------------------------------------------------------
+        check_sqrt(123, x"000B16472", "Rand 123");
+        check_sqrt(1024, x"002000000", "Power of 2 (1024)");
+        check_sqrt(4096, x"004000000", "Power of 2 (4096)");
+        check_sqrt(7, x"0002A54DB", "Root 7");
+        check_sqrt(200, x"000E23116", "Root 200");
+
+        report "========================================" severity note;
+        report "ALL 20+ TESTS COMPLETED." severity note;
+        report "========================================" severity failure;
+        wait;
+    end process;
+
+end behavior;

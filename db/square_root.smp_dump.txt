@@ -1,0 +1,30 @@
+
+State Machine - |square_root|control_unit:inst_control|state
+Name state.DONE_STATE state.UPDATE state.WAIT_DIVIDER state.KALKULASI state.INIT state.IDLE 
+state.IDLE 0 0 0 0 0 0 
+state.INIT 0 0 0 0 1 1 
+state.KALKULASI 0 0 0 1 0 1 
+state.WAIT_DIVIDER 0 0 1 0 0 1 
+state.UPDATE 0 1 0 0 0 1 
+state.DONE_STATE 1 0 0 0 0 1 
+
+State Machine - |square_root|uart_tx:inst_uart_tx|state
+Name state.FINISH state.WAIT_B5 state.SEND_B5 state.WAIT_B4 state.SEND_B4 state.WAIT_B3 state.SEND_B3 state.WAIT_B2 state.SEND_B2 state.WAIT_B1 state.SEND_B1 state.IDLE 
+state.IDLE 0 0 0 0 0 0 0 0 0 0 0 0 
+state.SEND_B1 0 0 0 0 0 0 0 0 0 0 1 1 
+state.WAIT_B1 0 0 0 0 0 0 0 0 0 1 0 1 
+state.SEND_B2 0 0 0 0 0 0 0 0 1 0 0 1 
+state.WAIT_B2 0 0 0 0 0 0 0 1 0 0 0 1 
+state.SEND_B3 0 0 0 0 0 0 1 0 0 0 0 1 
+state.WAIT_B3 0 0 0 0 0 1 0 0 0 0 0 1 
+state.SEND_B4 0 0 0 0 1 0 0 0 0 0 0 1 
+state.WAIT_B4 0 0 0 1 0 0 0 0 0 0 0 1 
+state.SEND_B5 0 0 1 0 0 0 0 0 0 0 0 1 
+state.WAIT_B5 0 1 0 0 0 0 0 0 0 0 0 1 
+state.FINISH 1 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |square_root|nr_block:inst_nr_block|radix4_divider:inst_divider|state
+Name state.FINISH state.CALC state.IDLE 
+state.IDLE 0 0 0 
+state.CALC 0 1 1 
+state.FINISH 1 0 1 

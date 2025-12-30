@@ -1,0 +1,142 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all; -- Needed for real number conversion
+
+entity tb_uart_print_result is
+end tb_uart_print_result;
+
+architecture behavior of tb_uart_print_result is
+
+    -- 1. DUT Declaration (Must match your Top-Level Entity)
+    component square_root is
+        port(
+            clk           : in  std_logic;
+            reset         : in  std_logic;
+            uart_rx_line  : in  std_logic;
+            uart_tx_line  : out std_logic;
+            led_busy      : out std_logic;
+            led_done      : out std_logic
+        );
+    end component;
+
+    -- Signals
+    signal clk          : std_logic := '0';
+    signal reset        : std_logic := '0';
+    signal uart_rx_line : std_logic := '1';
+    signal uart_tx_line : std_logic;
+    signal led_busy     : std_logic;
+    signal led_done     : std_logic;
+
+    -- Simulation Constants
+    constant CLK_PERIOD   : time := 20 ns;     -- 50 MHz
+    constant BAUD_PERIOD  : time := 104167 ns; -- 9600 Baud (1/9600)
+
+begin
+
+    -- 2. Instantiate DUT
+    uut: square_root port map (
+        clk          => clk,
+        reset        => reset,
+        uart_rx_line => uart_rx_line,
+        uart_tx_line => uart_tx_line,
+        led_busy     => led_busy,
+        led_done     => led_done
+    );
+
+    -- 3. Clock Process
+    clk_process :process
+    begin
+        clk <= '0'; wait for CLK_PERIOD/2;
+        clk <= '1'; wait for CLK_PERIOD/2;
+    end process;
+
+    -- 4. Main Verification Process
+    stim_proc: process
+        
+        -- Variable to hold the reassembled result
+        variable v_received_bytes : std_logic_vector(39 downto 0); -- 5 bytes * 8 bits
+        variable v_final_result   : std_logic_vector(35 downto 0);
+        variable v_int_part       : integer;
+        variable v_frac_part      : integer;
+        variable v_real_result    : real;
+
+        -- PROCEDURE: Send 1 Byte to FPGA
+        procedure UART_SEND(data_byte : in std_logic_vector(7 downto 0)) is
+        begin
+            uart_rx_line <= '0'; wait for BAUD_PERIOD; -- Start Bit
+            for i in 0 to 7 loop
+                uart_rx_line <= data_byte(i); wait for BAUD_PERIOD;
+            end loop;
+            uart_rx_line <= '1'; wait for BAUD_PERIOD; -- Stop Bit
+        end procedure;
+
+        -- PROCEDURE: Receive 1 Byte from FPGA
+        procedure UART_RECEIVE(variable byte_out : out std_logic_vector(7 downto 0)) is
+        begin
+            -- 1. Wait for Start Bit (Falling Edge)
+            wait until uart_tx_line = '0';
+            
+            -- 2. Wait 1.5 bit periods to center on Bit 0
+            wait for BAUD_PERIOD + (BAUD_PERIOD / 2);
+            
+            -- 3. Sample 8 Data Bits
+            for i in 0 to 7 loop
+                byte_out(i) := uart_tx_line;
+                wait for BAUD_PERIOD;
+            end loop;
+            
+            -- 4. Wait for Stop Bit (Just to align timing)
+            wait for BAUD_PERIOD;
+        end procedure;
+
+        variable v_temp_byte : std_logic_vector(7 downto 0);
+
+    begin
+        -- A. Reset System
+        reset <= '0'; wait for 100 ns;
+        reset <= '1'; wait for 100 ns;
+
+        -- B. Send Input: 10 (0x0000000A)
+        report ">>> SENDING INPUT: 10 (Hex: 00 00 00 0A)" severity note;
+        UART_SEND(x"00"); wait for 100 us;
+        UART_SEND(x"00"); wait for 100 us;
+        UART_SEND(x"00"); wait for 100 us;
+        UART_SEND(x"0A"); 
+
+        report ">>> DATA SENT. WAITING FOR RESPONSE..." severity note;
+
+        -- C. Receive 5 Bytes back
+        -- We loop 5 times because the FPGA sends 5 packets
+        for i in 4 downto 0 loop -- Fill from MSB (Byte 4) to LSB (Byte 0)
+            UART_RECEIVE(v_temp_byte);
+            v_received_bytes( (i*8)+7 downto (i*8) ) := v_temp_byte;
+            
+            -- Print each byte as it arrives
+            report "Received Byte " & integer'image(5-i) & ": " & integer'image(to_integer(unsigned(v_temp_byte)));
+        end loop;
+
+        -- D. Reassemble and Print Result
+        -- Protocol: The first 4 bits of the first byte are padding "0000".
+        -- We discard the top 4 bits of v_received_bytes to get the 36-bit Q16.20 result.
+        v_final_result := v_received_bytes(35 downto 0);
+
+        -- Convert Q16.20 to Real Number for human readability
+        -- Top 16 bits = Integer part
+        v_int_part := to_integer(unsigned(v_final_result(35 downto 20)));
+        -- Bottom 20 bits = Fraction part
+        v_frac_part := to_integer(unsigned(v_final_result(19 downto 0)));
+        
+        -- Calculation: Integer + (Fraction / 2^20)
+        v_real_result := real(v_int_part) + (real(v_frac_part) / 1048576.0);
+
+        report "==============================================" severity note;
+        report " FINAL RESULT: " & real'image(v_real_result);
+        report " (Expected for Sqrt(10): ~3.1622)" severity note;
+        report "==============================================" severity note;
+
+        -- E. Stop Simulation
+        wait;
+    end process;
+
+end behavior;

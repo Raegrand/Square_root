@@ -1,0 +1,105 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity tb_comparator is
+-- Testbench has no ports
+end tb_comparator;
+
+architecture Behavioral of tb_comparator is
+
+    component tb_comparator is
+        Port (
+            a_in   : in  std_logic_vector(61 downto 0);
+            b_in   : in  std_logic_vector(61 downto 0);
+            cmp_eq : out std_logic  -- RENAMED PORT
+        );
+    end component;
+
+    -- SIGNALS
+    signal a_in   : std_logic_vector(61 downto 0) := (others => '0');
+    signal b_in   : std_logic_vector(61 downto 0) := (others => '0');
+    signal cmp_eq : std_logic;      -- RENAMED SIGNAL
+
+begin
+
+    uut: comparator_q42_18
+        Port map (
+            a_in   => a_in,
+            b_in   => b_in,
+            cmp_eq => cmp_eq        -- RENAMED MAP
+        );
+
+    -- STIMULUS PROCESS
+    process
+        procedure check_comp(
+            constant a_hex      : in std_logic_vector(61 downto 0);
+            constant b_hex      : in std_logic_vector(61 downto 0);
+            constant exp_val    : in std_logic;
+            constant test_name  : in string
+        ) is
+        begin
+            a_in <= a_hex;
+            b_in <= b_hex;
+            
+            wait for 10 ns; 
+            
+            if cmp_eq = exp_val then
+                report "[PASS] " & test_name severity note;
+            else
+                report "[FAIL] " & test_name & 
+                       " | Expected: " & std_logic'image(exp_val) & 
+                       " | Got: " & std_logic'image(cmp_eq) severity error;
+            end if;
+            
+            wait for 10 ns;
+        end procedure;
+
+    begin
+        wait for 50 ns;
+
+        ------------------------------------------------------------
+        -- TEST VECTORS
+        ------------------------------------------------------------
+
+        -- Case 1: Exact Zeroes -> Equal
+        check_comp((others => '0'), (others => '0'), '1', 
+                   "Test 1: Exact Zeroes");
+        
+        -- Case 2: Exact Match (1.0) -> Equal
+        check_comp("00" & x"000000000" & x"100000",
+                   "00" & x"000000000" & x"100000",
+                   '1', "Test 2: Exact Match 1.0");
+                   
+        -- Case 3: Differs in Bit 0 (Ignored) -> Equal
+        check_comp((others => '0'),
+                   "00" & x"000000000" & x"000001",
+                   '1', "Test 3: Ignore Bit 0 difference");
+
+        -- Case 4: Differs in Bits 0 & 1 (Ignored) -> Equal
+        check_comp((others => '0'),
+                   "00" & x"000000000" & x"000003",
+                   '1', "Test 4: Ignore Bits 0&1 difference");
+
+        -- Case 5: Match on boundary (4 vs 7) -> Equal
+        -- 4 is ...100, 7 is ...111. Bit 2 (1) matches.
+        check_comp("00" & x"000000000" & x"000004",
+                   "00" & x"000000000" & x"000007",
+                   '1', "Test 5: Boundary Match");
+
+        -- Case 6: Differs in Bit 2 (Significant) -> Not Equal
+        -- 0 vs 4 ... Bit 2 differs.
+        check_comp((others => '0'),
+                   "00" & x"000000000" & x"000004",
+                   '0', "Test 6: Mismatch on Bit 2");
+
+        -- Case 7: Large Difference -> Not Equal
+        check_comp("00" & x"000000000" & x"100000",
+                   "00" & x"000000000" & x"200000",
+                   '0', "Test 7: Large Mismatch");
+
+        report "Comparator Tests Completed." severity failure;
+        wait;
+    end process;
+
+end Behavioral;
